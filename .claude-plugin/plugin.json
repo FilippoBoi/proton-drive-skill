@@ -1,0 +1,26 @@
+{
+  "name": "proton-drive",
+  "displayName": "Proton Drive",
+  "version": "0.1.0",
+  "description": "Work on your Proton Drive files from Claude: synced folder or cloud (rclone), with sandboxed root, automatic backups and confirmation for destructive actions.",
+  "license": "MIT",
+  "keywords": [
+    "proton",
+    "proton-drive",
+    "files",
+    "rclone",
+    "backup"
+  ],
+  "repository": "https://github.com/FilippoBoi/proton-drive-skill",
+  "homepage": "https://github.com/FilippoBoi/proton-drive-skill#readme",
+  "skills": [
+    "./.claude/skills/"
+  ],
+  "author": {
+    "name": "proton-drive-skill contributors"
+  },
+  "icon": "./.claude-plugin/icon.png",
+  "supportUrl": "https://github.com/FilippoBoi/proton-drive-skill/issues",
+  "documentationUrl": "https://github.com/FilippoBoi/proton-drive-skill#readme",
+  "privacyPolicyUrl": "https://github.com/FilippoBoi/proton-drive-skill/blob/main/PRIVACY.md"
+}

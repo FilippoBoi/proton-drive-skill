@@ -23,6 +23,15 @@ Lets Claude list, search, read, edit, create, move and delete files in your pers
 
 ## Install
 
+**As a Claude Code plugin (recommended)**, from this repository's own marketplace:
+```bash
+claude plugin marketplace add FilippoBoi/proton-drive-skill
+claude plugin install proton-drive@proton-drive-marketplace
+```
+or in one step on Claude Code 2.1.275 or later: `/plugin install proton-drive --marketplace FilippoBoi/proton-drive-skill`.
+
+**Or copy the skill by hand.**
+
 **On your PC (synced folder):**
 ```bash
 mkdir -p ~/.claude/skills && cp -r .claude/skills/proton-drive ~/.claude/skills/
@@ -48,5 +57,5 @@ Local-backend tests always run. Cloud-backend tests use rclone's `alias` remote 
 - Cloud mode: tokens can expire and an ephemeral container cannot keep refreshed ones, so you may need to re-export your login now and then.
 - The cloud mode has not been tested against a live Proton account by the author of this repository's first version; run `pd.py doctor` and report what you see.
 
-## Security
-See [SECURITY.md](SECURITY.md). License: [MIT](LICENSE).
+## Security and privacy
+See [SECURITY.md](SECURITY.md) and [PRIVACY.md](PRIVACY.md). License: [MIT](LICENSE).

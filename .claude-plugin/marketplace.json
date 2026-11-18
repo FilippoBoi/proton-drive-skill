@@ -1,0 +1,14 @@
+{
+  "name": "proton-drive-marketplace",
+  "description": "Skill for working on Proton Drive files from Claude",
+  "owner": {
+    "name": "proton-drive-skill contributors"
+  },
+  "plugins": [
+    {
+      "name": "proton-drive",
+      "source": "./",
+      "description": "Work on your Proton Drive files from Claude: synced folder or cloud (rclone), with sandboxed root, automatic backups and confirmation for destructive actions."
+    }
+  ]
+}
