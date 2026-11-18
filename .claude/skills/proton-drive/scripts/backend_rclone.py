@@ -106,7 +106,9 @@ class RcloneBackend:
         self.run(["copy" if st and st["type"] == "dir" else "copyto", self._p(rel), dest])
 
     def store(self, src, rel):
-        self.run(["copyto", src, self._p(rel)])
+        # --ignore-times: without it rclone skips the upload when size and modtime look equal
+        # (e.g. two edits within Proton's 1 s timestamp precision), reporting a success that never happened
+        self.run(["copyto", "--ignore-times", src, self._p(rel)])
         st = self.stat(rel)
         return bool(st) and st["size"] == os.path.getsize(src)
 
@@ -158,7 +160,7 @@ class RcloneBackend:
         rel = m["path"]
         if self.stat(rel):
             self.delete(rel)
-        self.run(["copy" if m.get("type") == "dir" else "copyto", self._b(bid, rel), self._p(rel)])
+        self.run(["copy" if m.get("type") == "dir" else "copyto", "--ignore-times", self._b(bid, rel), self._p(rel)])
         return rel
 
     def prune(self, days):

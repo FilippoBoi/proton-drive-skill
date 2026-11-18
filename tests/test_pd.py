@@ -195,6 +195,15 @@ class RcloneBackend(Shared, unittest.TestCase):
         self.set_cfg(backup_path="Work/bk")
         self.assertFalse(self.pd("status")["ok"])
 
+    def test_overwrite_with_same_size_and_mtime_is_not_skipped(self):
+        # regression: rclone's default skips copies when size+modtime match, which made put report a fake success
+        self.put_file("a.txt", "old")
+        new = self.write("new.txt", "new")
+        st = os.stat(self._p("a.txt"))
+        os.utime(new, ns=(st.st_atime_ns, st.st_mtime_ns))
+        self.pd("put", new, "a.txt", "--confirmed", ok=True)
+        self.assertEqual(self.read("a.txt"), "new")
+
     def test_backups_live_outside_root_in_remote(self):
         self.put_file("a.txt", "old")
         r = self.pd("rm", "a.txt", "--confirmed", ok=True)

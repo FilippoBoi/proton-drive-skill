@@ -30,7 +30,9 @@ def target():
 
 
 def get(url):
-    with urllib.request.urlopen(url, timeout=120) as r:
+    # downloads.rclone.org answers 403 to urllib's default User-Agent
+    req = urllib.request.Request(url, headers={"User-Agent": "proton-drive-skill-installer/0.1"})
+    with urllib.request.urlopen(req, timeout=120) as r:
         return r.read()
 
 
