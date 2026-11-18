@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.skill
+.proton-drive-skill/
+rclone.conf
+*.conf
+config.json
+.env

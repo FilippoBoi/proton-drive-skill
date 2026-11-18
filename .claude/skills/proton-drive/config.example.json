@@ -1,0 +1,20 @@
+{
+  "_comment_local": "Synced-folder mode (PC). Delete keys you don't need.",
+  "backend": "local",
+  "root": "C:\\Users\\YOUR_NAME\\Proton Drive\\Work",
+  "backup_dir": "",
+  "exclude": ["Private", "*.kdbx", "Passwords*"],
+  "read_only": false,
+  "large_file_mb": 100,
+  "backup_retention_days": 30,
+
+  "_comment_cloud": "Cloud mode (phone/cloud sessions): use these instead, passed via env PROTON_DRIVE_SKILL_CONFIG_JSON",
+  "_cloud_example": {
+    "backend": "rclone",
+    "remote": "proton",
+    "root": "Work",
+    "backup_path": "_backups",
+    "exclude": [],
+    "rclone_timeout": 900
+  }
+}
