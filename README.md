@@ -34,23 +34,23 @@ or in one step on Claude Code 2.1.275 or later: `/plugin install proton-drive --
 
 **On your PC (synced folder):**
 ```bash
-mkdir -p ~/.claude/skills && cp -r .claude/skills/proton-drive ~/.claude/skills/
+mkdir -p ~/.claude/skills && cp -r skills/proton-drive ~/.claude/skills/
 ```
 On Windows copy the folder to `%USERPROFILE%\.claude\skills\proton-drive`. Then ask Claude about your Proton Drive; on first use it asks which folder to use as root.
 
-**Phone / cloud sessions:** read [cloud-setup.md](.claude/skills/proton-drive/references/cloud-setup.md) first (it involves storing login material in a cloud environment), then attach this repository to a Claude Code cloud session so `.claude/skills/proton-drive/` is picked up, or upload the packaged skill:
+**Phone / cloud sessions:** read [cloud-setup.md](skills/proton-drive/references/cloud-setup.md) first (it involves storing login material in a cloud environment). Cloud sessions load skills from the repository attached to the session (`.claude/skills/`) or from skills uploaded to your account, so copy `skills/proton-drive` into the `.claude/skills/` folder of a repository you attach, or upload the packaged skill:
 ```bash
-cd .claude/skills && zip -r ../../proton-drive.skill proton-drive -x '*/__pycache__/*'
+cd skills && zip -r ../proton-drive.skill proton-drive -x '*/__pycache__/*'
 ```
 
 ## How it works
-Proton publishes no stable public API; its Drive SDK is still a preview not meant for third parties. So the skill uses the desktop app's synced folder (`local`) or rclone's `protondrive` backend (`rclone`), which is built from reverse-engineered behaviour and may break when Proton updates its apps. All operations go through [`scripts/pd.py`](.claude/skills/proton-drive/scripts/pd.py) (Python 3.9+, standard library only, about 850 lines): read it before trusting it with your files.
+Proton publishes no stable public API; its Drive SDK is still a preview not meant for third parties. So the skill uses the desktop app's synced folder (`local`) or rclone's `protondrive` backend (`rclone`), which is built from reverse-engineered behaviour and may break when Proton updates its apps. All operations go through [`scripts/pd.py`](skills/proton-drive/scripts/pd.py) (Python 3.9+, standard library only, about 850 lines): read it before trusting it with your files.
 
 ## Development
 ```bash
 python -m unittest discover -s tests -v
 ```
-Local-backend tests always run. Cloud-backend tests use rclone's `alias` remote on a temp folder (no Proton account needed) and run when rclone >= 1.66 is installed (`python .claude/skills/proton-drive/scripts/install_rclone.py`). CI runs on Linux, macOS and Windows.
+Local-backend tests always run. Cloud-backend tests use rclone's `alias` remote on a temp folder (no Proton account needed) and run when rclone >= 1.66 is installed (`python skills/proton-drive/scripts/install_rclone.py`). CI runs on Linux, macOS and Windows.
 
 ## Known limits
 - Sees only the synced folder (local) or the configured root (cloud); no sharing links, permissions or cloud-side version history.

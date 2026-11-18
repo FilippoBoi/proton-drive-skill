@@ -7,7 +7,7 @@ temp folder (no Proton account needed) and run only if rclone >= 1.66 is availab
 import base64, json, os, shutil, subprocess, sys, tempfile, unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-PD = os.path.join(HERE, "..", ".claude", "skills", "proton-drive", "scripts", "pd.py")
+PD = os.path.join(HERE, "..", "skills", "proton-drive", "scripts", "pd.py")
 
 
 def find_rclone():

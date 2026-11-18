@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """proton-drive helper: safe file operations on a Proton Drive, locally synced folder OR cloud (rclone).
 
 Standard library only. Every command prints JSON. Exit code 0 = ok, 1 = refused/error.

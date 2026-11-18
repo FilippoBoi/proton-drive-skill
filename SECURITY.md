@@ -3,7 +3,7 @@
 This skill can read, change and delete files in a Proton Drive, and in cloud mode it needs Proton login material. Please read this before using or reporting issues.
 
 ## Threat model in short
-- **Cloud mode stores Proton session tokens** (inside an rclone config) in the environment that runs Claude. Anyone who can read that environment, or any process in the session, can use them. Use a dedicated secondary Proton account holding only the files you want to work on, in a personal environment. See `.claude/skills/proton-drive/references/cloud-setup.md`.
+- **Cloud mode stores Proton session tokens** (inside an rclone config) in the environment that runs Claude. Anyone who can read that environment, or any process in the session, can use them. Use a dedicated secondary Proton account holding only the files you want to work on, in a personal environment. See `skills/proton-drive/references/cloud-setup.md`.
 - **The root folder limits what the skill does, not what the credentials can reach.**
 - Safety rules (sandbox, confirmation flags, backups) are enforced by `scripts/pd.py`, but a model can still call a command with `--confirmed`. The skill instructs it to do so only after your explicit approval; for stronger guarantees set `"read_only": true`, and review actions in your client's permission prompts.
 - The rclone `protondrive` backend is unofficial and beta. Proton may change its behaviour at any time.

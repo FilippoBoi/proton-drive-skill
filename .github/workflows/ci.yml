@@ -14,9 +14,9 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Install rclone (also exercises the installer)
-        run: python .claude/skills/proton-drive/scripts/install_rclone.py
+        run: python skills/proton-drive/scripts/install_rclone.py
         continue-on-error: true
       - name: Compile
-        run: python -m compileall -q .claude/skills/proton-drive/scripts
+        run: python -m compileall -q skills/proton-drive/scripts
       - name: Tests
         run: python -m unittest discover -s tests -v

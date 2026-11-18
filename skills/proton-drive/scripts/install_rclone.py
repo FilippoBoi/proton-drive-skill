@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Install rclone (>= 1.66, needed for the Proton Drive backend) into ~/.proton-drive-skill/bin.
 
 Order: 1) reuse an rclone that is already new enough, 2) download the official release from

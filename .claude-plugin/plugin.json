@@ -13,9 +13,6 @@
   ],
   "repository": "https://github.com/FilippoBoi/proton-drive-skill",
   "homepage": "https://github.com/FilippoBoi/proton-drive-skill#readme",
-  "skills": [
-    "./.claude/skills/"
-  ],
   "author": {
     "name": "proton-drive-skill contributors"
   },

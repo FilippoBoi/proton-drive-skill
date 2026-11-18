@@ -30,7 +30,7 @@ The rclone `protondrive` backend is unofficial and marked beta (it relies on rev
   Without it, the skill runs `scripts/install_rclone.py` on first use (verifies the SHA256 of the download, falls back to `go install`).
 
 ## Getting the skill into cloud sessions
-Either commit the folder to a repository you attach to the session, as `.claude/skills/proton-drive/`, or install the `.skill` file from your account settings (Capabilities → Skills) so that it syncs to your sessions. If it does not show up in a new session, use the repository route.
+Copy this folder into `.claude/skills/proton-drive/` of a repository that you attach to the session (a private repo of your own is fine), or install the packaged `.skill` file from your account settings (Capabilities → Skills) so that it syncs to your sessions. If it does not show up in a new session, use the repository route.
 
 ## Using it from the phone
 Open the Code tab in the Claude app, start a session in the environment above, and ask in plain language ("list the files in Work", "rename the invoices from March"). The skill runs `doctor` first.
