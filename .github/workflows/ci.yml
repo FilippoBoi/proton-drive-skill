@@ -1,22 +1,61 @@
-name: tests
+name: checks
 on: [push, pull_request]
 jobs:
-  test:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-22.04, macos-latest, windows-latest]
-        python: ["3.9", "3.13"]
-    runs-on: ${{ matrix.os }}
+  no-code:
+    # The plugin directory only accepts Markdown, text, JSON, YAML and images from unverified publishers.
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Only allowed file types, no shebangs
+        run: |
+          bad=$(git ls-files | grep -Evi '\.(md|json|yml|yaml|png)$|^LICENSE$|^\.gitignore$' || true)
+          [ -z "$bad" ] || { echo "Not allowed:"; echo "$bad"; exit 1; }
+          if git grep -lI '^#!' -- . ':!.github'; then echo "shebang found"; exit 1; fi
+  recipes:
+    # Runs the cloud-mode recipes against an rclone alias remote that stands in for Proton.
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install rclone
+        run: |
+          curl -fsSL -A "proton-drive-skill-ci" -o rclone.zip https://downloads.rclone.org/v1.69.3/rclone-v1.69.3-linux-amd64.zip
+          mkdir -p "$HOME/bin" && unzip -j -o rclone.zip '*/rclone' -d "$HOME/bin" && chmod +x "$HOME/bin/rclone"
+          echo "$HOME/bin" >> "$GITHUB_PATH"
+      - name: Cloud-mode recipes
+        run: |
+          set -euo pipefail
+          T=$(mktemp -d); mkdir -p "$T/acct/Work/sub" "$T/acct/_backups" "$T/acct/Secret"
+          echo old > "$T/acct/Work/a.txt"; echo deep > "$T/acct/Work/sub/b.txt"; echo secret > "$T/acct/Secret/s.txt"
+          mkdir -p ~/.config/rclone
+          printf '[proton]\ntype = alias\nremote = %s/acct\n\n[work]\ntype = alias\nremote = proton:Work\n\n[backup]\ntype = alias\nremote = proton:_backups\n' "$T" > ~/.config/rclone/rclone.conf
+          export PROTON_RCLONE_CONF_B64=$(base64 -w0 ~/.config/rclone/rclone.conf); rm ~/.config/rclone/rclone.conf
+          # health check, as written in cloud-mode.md
+          [ -f ~/.config/rclone/rclone.conf ] || { printf %s "$PROTON_RCLONE_CONF_B64" | base64 -d > ~/.config/rclone/rclone.conf; chmod 600 ~/.config/rclone/rclone.conf; }
+          rclone lsjson --max-depth 1 work: >/dev/null; rclone lsjson --max-depth 1 backup: >/dev/null
+          # paths with .. do not leave the root
+          [ -z "$(rclone lsf 'work:../Secret' 2>/dev/null || true)" ]
+          [ -z "$(rclone lsf 'work:sub/../../Secret' 2>/dev/null || true)" ]
+          # stat: missing item gives a non-zero exit code
+          ! rclone lsjson --stat work:nope.txt >/dev/null 2>&1
+          # overwrite with same size and mtime is not skipped, and the old version is backed up
+          ID=20261118-120000; echo new > "$T/new.txt"; touch -r "$T/acct/Work/a.txt" "$T/new.txt"
+          rclone copyto work:a.txt backup:$ID/a.txt
+          rclone copyto --ignore-times "$T/new.txt" work:a.txt
+          [ "$(cat "$T/acct/Work/a.txt")" = new ] && [ "$(cat "$T/acct/_backups/$ID/a.txt")" = old ]
+          # dry run does not move anything
+          rclone moveto --dry-run work:a.txt work:c.txt; [ -f "$T/acct/Work/a.txt" ] && [ ! -e "$T/acct/Work/c.txt" ]
+          # delete = move into backup, then restore
+          ID2=20261118-120100
+          rclone moveto work:sub backup:$ID2/sub
+          [ ! -e "$T/acct/Work/sub" ] && [ -f "$T/acct/_backups/$ID2/sub/b.txt" ]
+          rclone moveto backup:$ID2/sub work:sub
+          [ -f "$T/acct/Work/sub/b.txt" ]
+  validate:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          python-version: ${{ matrix.python }}
-      - name: Install rclone (also exercises the installer)
-        run: python skills/proton-drive/scripts/install_rclone.py
-        continue-on-error: true
-      - name: Compile
-        run: python -m compileall -q skills/proton-drive/scripts
-      - name: Tests
-        run: python -m unittest discover -s tests -v
+          node-version: "22"
+      - run: npm install -g @anthropic-ai/claude-code
+      - run: claude plugin validate .

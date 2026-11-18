@@ -2,7 +2,7 @@
   "name": "proton-drive",
   "displayName": "Proton Drive",
   "version": "0.1.0",
-  "description": "Work on your Proton Drive files from Claude: synced folder or cloud (rclone), with sandboxed root, automatic backups and confirmation for destructive actions.",
+  "description": "Work on your Proton Drive files from Claude, from a synced folder or the cloud (rclone). Instructions only, no bundled code: rules for a sandboxed root, backups before changes and confirmation for destructive actions.",
   "license": "MIT",
   "keywords": [
     "proton",
